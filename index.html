@@ -63,6 +63,17 @@ button:hover {
     box-shadow: 0 0 15px #ff4da6;
 }
 
+.skip-btn {
+    background: #ffffff;
+    color: #ff4da6;
+    border: 1px solid #ff99cc;
+}
+
+.skip-btn:hover {
+    background: #fff0f7;
+    box-shadow: 0 0 12px rgba(255, 77, 166, 0.35);
+}
+
 /* Cake */
 .cake-container {
     position: relative;
@@ -299,9 +310,100 @@ button:hover {
 }
 
 /* Blur background effect */
-body.blur-bg #page2 .page {
+body.blur-bg #page2 {
     filter: blur(2px);
     transition: 0.5s;
+}
+
+@media (max-width: 768px) {
+    .page {
+        min-height: 100dvh;
+        height: auto;
+        padding: 16px;
+        box-sizing: border-box;
+    }
+
+    .card {
+        width: min(92vw, 360px);
+        padding: 18px;
+        border-radius: 18px;
+    }
+
+    .title {
+        font-size: 1.6rem;
+        line-height: 1.25;
+    }
+
+    button {
+        width: 100%;
+        min-height: 44px;
+        font-size: 16px;
+    }
+
+    .time-box {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .time-box div {
+        width: 68px;
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .time-box span {
+        font-size: 18px;
+    }
+
+    .cake-container {
+        width: min(70vw, 230px);
+    }
+
+    .knife {
+        width: 82px;
+        top: -16px;
+        right: -52px;
+    }
+
+    .gift-grid {
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+        gap: 12px;
+        width: 100%;
+    }
+
+    .gift {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        height: auto;
+    }
+
+    #birthdayText {
+        font-size: 42px;
+        text-align: center;
+        width: 90vw;
+    }
+
+    #countText {
+        font-size: 56px;
+    }
+
+    #gallery h2 {
+        font-size: 1.4rem;
+        text-align: center;
+        margin: 8px 0;
+    }
+
+    #slideshow {
+        height: 62vh;
+        width: 100%;
+    }
+
+    #slideImage,
+    #slideVideo {
+        max-height: 100%;
+        width: 100%;
+        object-fit: contain;
+    }
 }
 </style>
 </head>
@@ -321,6 +423,7 @@ body.blur-bg #page2 .page {
         </div>
 
         <p style="margin-top:10px;">Just a little more... 🎁</p>
+        <button class="skip-btn" onclick="skipCountdown()">Next Page ▶</button>
     </div>
 </div>
 
@@ -489,31 +592,14 @@ function startBirthdayConfetti(){
 }
 
 function startCountdown(){
-    const target = new Date();
-    target.setHours(24,0,0,0);
+    document.getElementById("days").innerText = 0;
+    document.getElementById("hours").innerText = 0;
+    document.getElementById("minutes").innerText = 0;
+    document.getElementById("seconds").innerText = 0;
+}
 
-    function update(){
-        const current = new Date().getTime();
-        const distance = target.getTime() - current;
-
-        if(distance <= 0){
-            goToPage(1);
-            return;
-        }
-
-        const days = Math.floor(distance / (1000*60*60*24));
-        const hours = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
-        const minutes = Math.floor((distance % (1000*60*60)) / (1000*60));
-        const seconds = Math.floor((distance % (1000*60)) / 1000);
-
-        document.getElementById("days").innerText = days;
-        document.getElementById("hours").innerText = hours;
-        document.getElementById("minutes").innerText = minutes;
-        document.getElementById("seconds").innerText = seconds;
-    }
-
-    update();
-    setInterval(update,1000);
+function skipCountdown(){
+    goToPage(1);
 }
 
 startCountdown();
