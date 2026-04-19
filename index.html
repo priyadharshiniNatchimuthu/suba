@@ -213,7 +213,7 @@ button:hover {
 }
 
 #slideImage, #slideVideo {
-    max-width: 90%;
+    max-width: 100%;
     max-height: 80%;
     border-radius: 15px;
     transition: opacity 0.5s;
@@ -233,6 +233,10 @@ button:hover {
 
 #gallery.family-bg {
     background: linear-gradient(rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.25)), url("b4.jpg") center/cover no-repeat;
+}
+
+#gallery.videos-bg {
+    background: linear-gradient(rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.25)), url("b5.jpg") center/cover no-repeat;
 }
 
 #page0, #page1, #page2, #page3, #page4, #page5 {
@@ -258,6 +262,46 @@ button:hover {
     font-size: 20px;
     font-weight: bold;
     color: #ff4da6;
+}
+
+
+/* Birthday Animation */
+#birthdayText {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+    font-size: 60px;
+    font-weight: bold;
+    color: #ff4da6;
+    opacity: 0;
+    text-shadow: 0 0 20px #ff99cc, 0 0 40px #ff66cc, 0 0 60px #ff99cc;
+    z-index: 999;
+    pointer-events: none;
+}
+
+#birthdayText.showText {
+    animation: zoomInText 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes zoomInText {
+    0% {
+        transform: translate(-50%, -50%) scale(0.3);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+}
+
+/* Blur background effect */
+body.blur-bg #page2 .page {
+    filter: blur(2px);
+    transition: 0.5s;
 }
 </style>
 </head>
@@ -290,6 +334,7 @@ button:hover {
 
 <!-- PAGE 2 -->
 <div id="page2" class="page">
+    <div id="birthdayText">🎉 Happy Birthday 🎉</div>
     <div class="card">
         <h2 class="title">🎉 Happy Birthday 🎉</h2>
 
@@ -356,7 +401,8 @@ button:hover {
 <audio id="musicFriends" src="music2.mp3" preload="auto" loop></audio>
 <audio id="musicFuture" src="music3.mp3" preload="auto" loop></audio>
 <audio id="musicUs" src="music4.mp3" preload="auto" loop></audio>
-<audio id="musicVideos" src="music5.mp3" preload="auto" loop></audio>
+<audio id="musicVideos" src="music5.mp3" preload="auto"></audio>
+<audio id="musicVideos6" src="music6.mp3" preload="auto" loop></audio>
 
 <!-- Flower + Countdown Overlay -->
 <div id="flowerOverlay" class="overlay">
@@ -378,7 +424,15 @@ function goToPage(n){
 document.getElementById("knife").onclick = () => {
     document.getElementById("cutLine").style.height = "120px";
     document.getElementById("cakeMsg").innerText = "Cake Cut 🎉";
-    setTimeout(()=>goToPage(3),1500);
+    
+    // Trigger birthday animation
+    setTimeout(() => {
+        document.body.classList.add("blur-bg");
+        document.getElementById("birthdayText").classList.add("showText");
+        startBirthdayConfetti();
+    }, 800);
+    
+    setTimeout(()=>goToPage(3),2500);
 };
 
 /* Confetti */
@@ -407,6 +461,32 @@ function createHearts(){
 }
 
 createHearts();
+
+function startBirthdayConfetti(){
+    for(let i=0;i<50;i++){
+        let confetti = document.createElement("div");
+        confetti.innerHTML = "✨";
+        confetti.style.position = "fixed";
+        confetti.style.left = Math.random()*100 + "vw";
+        confetti.style.top = "-10px";
+        confetti.style.fontSize = "24px";
+        confetti.style.zIndex = "1000";
+        document.body.appendChild(confetti);
+
+        let startLeft = Math.random()*100;
+        let endLeft = startLeft + (Math.random() - 0.5) * 200;
+        
+        let fall = confetti.animate([
+            {transform: "translateY(0) translateX(0)", opacity: 1},
+            {transform: `translateY(100vh) translateX(${endLeft - startLeft}px)`, opacity: 0}
+        ], {
+            duration: 2000 + Math.random()*2000,
+            easing: "ease-out"
+        });
+
+        fall.onfinish = () => confetti.remove();
+    }
+}
 
 function startCountdown(){
     const target = new Date();
@@ -493,9 +573,9 @@ const galleries = {
 
     friends: [
         "f1.jpg","f2.jpg","f3.jpg","f4.jpg","f5.jpg",
-        "f6.jpg","f7.jpeg","f8.jpeg","f9.jpeg","f10.jpeg","f11.jpg","f12.jpeg","f13.jpeg","f14.jpg","f15.jpg",
-        "f16.jpg","f17.jpeg","f18.jpeg","f19.jpeg","f20.jpeg", "f21.jpg","f22.jpg","f23.jpg","f24.jpg","f25.jpg",
-        "f26.jpg","f27.jpeg","f28.jpeg"
+        "f6.jpg","f7.jpeg","f8.jpeg","f9.jpeg","f10.jpeg","f11.jpg","f12.jpeg","f13.jpeg","f14.jpeg","f15.jpeg",
+        "f16.jpeg","f17.jpeg","f18.jpeg","f19.jpeg","f20.jpeg", "f21.jpeg","f22.jpeg","f23.jpeg","f24.jpeg","f25.jpeg",
+        "f26.jpeg","f27.jpeg","f28.jpeg"
     ],
 
     future: [
@@ -510,7 +590,7 @@ const galleries = {
     ],
 
     videos: [
-        "v1.mp4","v2.mp4","v3.mp4","p1.jpeg","p2.jpeg","p3.jpeg"
+        "v1.mp4","v2.mp4","v3.mp4","v4.mp4","v5.mp4","v6.mp4","v7.mp4","v8.mp4","v9.mp4","v10.mp4","v11.mp4","v12.mp4","v13.mp4","v14.mp4","v15.mp4","v16.mp4","p1.jpeg","p2.jpeg","p3.jpeg","p4.jpeg","p5.jpeg"
     ]
 };
 
@@ -525,6 +605,7 @@ function openGallery(type){
     galleryPage.classList.toggle("friends-bg", type === "friends");
     galleryPage.classList.toggle("us-bg", type === "us");
     galleryPage.classList.toggle("future-bg", type === "future");
+    galleryPage.classList.toggle("videos-bg", type === "videos");
     document.getElementById("galleryTitle").innerText="";
 
     // Stop all music first
@@ -549,6 +630,16 @@ function openGallery(type){
         document.getElementById(musicId).play().catch(() => {
             console.log("Music playback was blocked by the browser.");
         });
+        
+        // If videos gift, set up music6 to play after music5 ends
+        if(type === "videos"){
+            document.getElementById("musicVideos").onended = () => {
+                document.getElementById("musicVideos6").currentTime = 0;
+                document.getElementById("musicVideos6").play().catch(() => {
+                    console.log("Music6 playback was blocked by the browser.");
+                });
+            };
+        }
     }
 
     index=0;
@@ -608,6 +699,7 @@ function showVideo(){
             vid.style.display = "block";
             vid.muted = true;
             vid.src = file;
+            vid.playbackRate = 2;
             vid.onended = () => {
                 mediaIndex++;
                 playNextMedia();
@@ -634,7 +726,7 @@ function showVideo(){
 
 function closeGallery(){
     goToPage(4);
-    document.getElementById("gallery").classList.remove("family-bg", "friends-bg", "us-bg", "future-bg");
+    document.getElementById("gallery").classList.remove("family-bg", "friends-bg", "us-bg", "future-bg", "videos-bg");
     clearInterval(interval);
     // Stop all music
     document.getElementById("musicFamily").pause();
@@ -642,12 +734,14 @@ function closeGallery(){
     document.getElementById("musicFuture").pause();
     document.getElementById("musicUs").pause();
     document.getElementById("musicVideos").pause();
+    document.getElementById("musicVideos6").pause();
     // Reset all music
     document.getElementById("musicFamily").currentTime = 0;
     document.getElementById("musicFriends").currentTime = 0;
     document.getElementById("musicFuture").currentTime = 0;
     document.getElementById("musicUs").currentTime = 0;
     document.getElementById("musicVideos").currentTime = 0;
+    document.getElementById("musicVideos6").currentTime = 0;
     const vid = document.getElementById("slideVideo");
     vid.pause();
     vid.currentTime = 0;
