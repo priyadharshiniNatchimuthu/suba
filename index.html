@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Surprise 🎉</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&family=Pacifico&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #ffe6f0;
+}
+
+/* Pages */
+.page {
+    display: none;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-attachment: fixed;
+}
+.active { display: flex; }
+
+/* Card */
+.card {
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(12px);
+    padding: 25px;
+    border-radius: 25px;
+    text-align: center;
+    width: 360px;
+    transition: 0.4s;
+}
+
+.card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+/* Title */
+.title {
+    font-family: 'Pacifico', cursive;
+    color: #ff4da6;
+}
+
+/* Button */
+button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    background: #ff4da6;
+    color: white;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #ff1a8c;
+    box-shadow: 0 0 15px #ff4da6;
+}
+
+/* Cake */
+.cake-container {
+    position: relative;
+    width: 250px;
+}
+
+.knife {
+    position: absolute;
+    width: 100px;
+    top: -20px;
+    right: -80px;
+    transform: rotate(-30deg);
+    cursor: pointer;
+}
+
+.cut-line {
+    position: absolute;
+    width: 4px;
+    height: 0;
+    background: #ff4da6;
+    left: 50%;
+    top: 20%;
+    transform: translateX(-50%);
+}
+
+/* Gifts */
+.gift-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 160px);
+    gap: 25px;
+}
+
+.gift {
+    width: 160px;
+    height: 160px;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.gift img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.5s;
+}
+
+/* Gift image comes forward */
+.gift:hover img {
+    transform: scale(1.2);
+    filter: brightness(1.1);
+}
+
+/* Glow */
+.gift:hover {
+    box-shadow: 0 0 25px #ff4da6, 0 0 50px #ff99cc;
+}
+
+/* Open animation */
+.opened {
+    animation: pop 0.4s ease;
+}
+
+@keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+/* Center last */
+.center {
+    grid-column: span 2;
+}
+
+/* Confetti */
+.confetti {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    top: 0;
+    animation: fall 1s linear forwards;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}
+
+.heart {
+    position: fixed;
+    color: pink;
+    font-size: 20px;
+    animation: floatUp 5s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(100vh); opacity:1; }
+    100% { transform: translateY(-10vh); opacity:0; }
+}
+
+/* Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: rgba(255,255,255,0.3);
+    backdrop-filter: blur(10px);
+    z-index: 999;
+}
+
+/* Countdown text */
+#countText {
+    font-size: 80px;
+    color: #ff4da6;
+    font-weight: bold;
+}
+
+/* Flowers */
+.flower {
+    position: fixed;
+    font-size: 24px;
+    animation: flowerFall 3s linear forwards;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+@keyframes flowerFall {
+    0% { transform: translateY(-10vh) rotate(0deg); opacity:1; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity:0; }
+}
+
+/* 🎬 Slideshow */
+#slideshow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+#slideImage, #slideVideo {
+    max-width: 90%;
+    max-height: 80%;
+    border-radius: 15px;
+    transition: opacity 0.5s;
+}
+
+#gallery.friends-bg {
+    background: linear-gradient(rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.25)), url("b1.jpg") center/cover no-repeat;
+}
+
+#gallery.us-bg {
+    background: linear-gradient(rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.25)), url("b2.jpg") center/cover no-repeat;
+}
+
+#gallery.future-bg {
+    background: linear-gradient(rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.25)), url("b3.jpg") center/cover no-repeat;
+}
+
+#gallery.family-bg {
+    background: linear-gradient(rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.25)), url("b4.jpg") center/cover no-repeat;
+}
+
+#page0, #page1, #page2, #page3, #page4, #page5 {
+    background: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)), url("im1.jpg") center/cover no-repeat;
+}
+
+.time-box {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.time-box div {
+    background: #fff0f5;
+    padding: 10px;
+    border-radius: 12px;
+    width: 60px;
+    font-size: 14px;
+}
+
+.time-box span {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ff4da6;
+}
+</style>
+</head>
+
+<body>
+
+<!-- PAGE 0 COUNTDOWN -->
+<div id="page0" class="page active">
+    <div class="card">
+        <h2 class="title">Your Special Day is Almost Here 💖</h2>
+
+        <div class="time-box">
+            <div><span id="days">0</span><br>Days</div>
+            <div><span id="hours">0</span><br>Hours</div>
+            <div><span id="minutes">0</span><br>Minutes</div>
+            <div><span id="seconds">0</span><br>Seconds</div>
+        </div>
+
+        <p style="margin-top:10px;">Just a little more... 🎁</p>
+        <button onclick="goToPage(1)">Skip ▶</button>
+    </div>
+</div>
+
+<!-- PAGE 1 -->
+<div id="page1" class="page">
+    <div class="card">
+        <h2 class="title">Your Special Day 💖</h2>
+        <button onclick="goToPage(2)">Start ▶</button>
+    </div>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2" class="page">
+    <div class="card">
+        <h2 class="title">🎉 Happy Birthday 🎉</h2>
+
+        <div class="cake-container">
+            <img src="https://pngimg.com/uploads/cake/cake_PNG13127.png" width="100%">
+            <img src="knife.png" class="knife" id="knife">
+            <div class="cut-line" id="cutLine"></div>
+        </div>
+
+        <p id="cakeMsg"></p>
+    </div>
+</div>
+
+<!-- PAGE 3 -->
+<div id="page3" class="page">
+    <div class="card">
+        <h2 class="title">Happy Birthday 💖</h2>
+        <div onclick="goToPage(4)" style="padding:20px;background:#ff4da6;color:white;border-radius:15px;cursor:pointer;">
+            🎁 Open Gifts
+        </div>
+    </div>
+</div>
+
+<!-- PAGE 4 -->
+<div id="page4" class="page">
+    <div class="card">
+        <h2>🎁 Choose Your Gift</h2>
+
+        <div class="gift-grid">
+            <div class="gift" onclick="openGift(this,'family')"><img src="g1.jpg"></div>
+            <div class="gift" onclick="openGift(this,'friends')"><img src="g2.jpg"></div>
+            <div class="gift" onclick="openGift(this,'future')"><img src="g3.jpg"></div>
+            <div class="gift" onclick="openGift(this,'us')"><img src="g4.jpg"></div>
+            <div class="gift" onclick="openGift(this,'videos')"><img src="g5.jpg"></div>
+            <div class="gift" onclick="openFinalGift(this)"><img src="g6.jpg"></div>
+        </div>
+    </div>
+</div>
+
+<!-- PAGE 5 -->
+<div id="page5" class="page">
+    <div class="card">
+        <h2 class="title">Greetings From My Heart 💖</h2>
+        <p style="font-size:18px;color:#ff4da6;font-weight:600;">Thank You So Much ✨</p>
+        <p style="color:#555;line-height:1.5;">Thanks for being part of this special day.<br>You make every moment brighter.</p>
+        <button onclick="goToPage(4)">Back To Gifts</button>
+    </div>
+</div>
+
+<!-- 🎬 SLIDESHOW -->
+<div id="gallery" class="page">
+    <h2 id="galleryTitle"></h2>
+
+    <div id="slideshow">
+        <img id="slideImage">
+        <video id="slideVideo" muted controls style="display:none;"></video>
+    </div>
+
+    <button onclick="closeGallery()">Close</button>
+</div>
+
+<!-- 🎵 MUSIC - 5 Different Songs for 5 Gifts -->
+<audio id="musicFamily" src="music1.mp3" preload="auto" loop></audio>
+<audio id="musicFriends" src="music2.mp3" preload="auto" loop></audio>
+<audio id="musicFuture" src="music3.mp3" preload="auto" loop></audio>
+<audio id="musicUs" src="music4.mp3" preload="auto" loop></audio>
+<audio id="musicVideos" src="music5.mp3" preload="auto" loop></audio>
+
+<!-- Flower + Countdown Overlay -->
+<div id="flowerOverlay" class="overlay">
+    <div id="countText">5</div>
+</div>
+
+<script>
+let currentGiftType = null;
+function goToPage(n){
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+    const targetId = /^\d+$/.test(String(n)) ? "page" + n : String(n);
+    const targetPage = document.getElementById(targetId);
+    if (targetPage) {
+        targetPage.classList.add("active");
+    }
+}
+
+/* Cake */
+document.getElementById("knife").onclick = () => {
+    document.getElementById("cutLine").style.height = "120px";
+    document.getElementById("cakeMsg").innerText = "Cake Cut 🎉";
+    setTimeout(()=>goToPage(3),1500);
+};
+
+/* Confetti */
+function createConfetti(){
+    for(let i=0;i<20;i++){
+        let c=document.createElement("div");
+        c.className="confetti";
+        c.style.left=Math.random()*100+"vw";
+        c.style.background="red";
+        document.body.appendChild(c);
+        setTimeout(()=>c.remove(),1000);
+    }
+}
+
+function createHearts(){
+    setInterval(()=>{
+        let heart=document.createElement("div");
+        heart.className="heart";
+        heart.innerText="💖";
+        heart.style.left=Math.random()*100+"vw";
+
+        document.body.appendChild(heart);
+
+        setTimeout(()=>heart.remove(),5000);
+    },800);
+}
+
+createHearts();
+
+function startCountdown(){
+    const target = new Date();
+    target.setHours(24,0,0,0);
+
+    function update(){
+        const current = new Date().getTime();
+        const distance = target.getTime() - current;
+
+        if(distance <= 0){
+            goToPage(1);
+            return;
+        }
+
+        const days = Math.floor(distance / (1000*60*60*24));
+        const hours = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
+        const minutes = Math.floor((distance % (1000*60*60)) / (1000*60));
+        const seconds = Math.floor((distance % (1000*60)) / 1000);
+
+        document.getElementById("days").innerText = days;
+        document.getElementById("hours").innerText = hours;
+        document.getElementById("minutes").innerText = minutes;
+        document.getElementById("seconds").innerText = seconds;
+    }
+
+    update();
+    setInterval(update,1000);
+}
+
+startCountdown();
+
+function createFlowers(){
+    for(let i=0;i<25;i++){
+        let f = document.createElement("div");
+        f.className = "flower";
+        f.innerText = "🌸";
+
+        f.style.left = Math.random()*100 + "vw";
+        f.style.animationDuration = (2 + Math.random()) + "s";
+
+        document.body.appendChild(f);
+
+        setTimeout(()=>f.remove(),3000);
+    }
+}
+
+/* Gift */
+function openGift(el,type){
+    el.classList.add("opened");
+
+    const overlay = document.getElementById("flowerOverlay");
+    overlay.style.display = "flex";
+
+    createFlowers();
+
+    let count = 5;
+    const countText = document.getElementById("countText");
+    countText.innerText = count;
+
+    const countdownInterval = setInterval(() => {
+        count--;
+        countText.innerText = count;
+
+        if(count === 0){
+            clearInterval(countdownInterval);
+            overlay.style.display = "none";
+            openGallery(type);
+        }
+    }, 800);
+}
+
+function openFinalGift(el){
+    el.classList.add("opened");
+    createConfetti();
+    setTimeout(()=>goToPage(5),800);
+}
+
+/* DATA - 15 images per gift with cycling */
+const galleries = {
+    family: [
+        "1.jpg","2.jpeg","3.jpeg","4.jpeg","5.jpeg",
+        "6.jpeg","7.jpeg","8.jpeg","9.jpeg","10.jpeg","11.jpeg","12.jpeg","13.jpeg","14.jpeg","15.jpeg","16.jpeg","17.jpeg","18.jpeg","19.jpeg","20.jpeg","21.jpeg","22.jpeg"
+    ],
+
+    friends: [
+        "f1.jpg","f2.jpg","f3.jpg","f4.jpg","f5.jpg",
+        "f6.jpg","f7.jpeg","f8.jpeg","f9.jpeg","f10.jpeg","f11.jpg","f12.jpeg","f13.jpeg","f14.jpg","f15.jpg",
+        "f16.jpg","f17.jpeg","f18.jpeg","f19.jpeg","f20.jpeg", "f21.jpg","f22.jpg","f23.jpg","f24.jpg","f25.jpg",
+        "f26.jpg","f27.jpeg","f28.jpeg"
+    ],
+
+    future: [
+        "fu1.jpeg","fu2.jpeg","fu3.jpeg","fu4.jpeg","fu5.jpeg",
+        "fu6.jpeg","fu7.jpeg","fu8.jpeg","fu9.jpeg","fu10.jpeg", "fu11.jpeg","fu12.jpeg","fu13.jpeg","fu14.jpeg","fu15.jpeg",
+        "fu16.jpeg","fu17.jpeg"
+    ],
+
+    us: [
+        "u1.jpg","u2.jpg","u3.jpeg","u4.jpeg","u5.jpeg",
+        "u6.jpeg","u7.jpeg","u8.jpeg","u9.jpeg","u10.jpeg","u11.jpeg","u12.jpeg","u13.jpeg","u14.jpeg","u15.jpeg","u16.jpeg","u17.jpeg","u18.jpeg","u19.jpeg","u20.jpeg","u21.jpeg","u22.jpeg","u23.jpeg","u24.jpeg","u25.jpeg","u26.jpeg","u27.jpeg","u28.jpeg","u29.jpeg","u30.jpeg"
+    ],
+
+    videos: [
+        "v1.mp4","v2.mp4","v3.mp4","p1.jpeg","p2.jpeg","p3.jpeg"
+    ]
+};
+
+/* SLIDESHOW */
+let index=0, interval;
+
+function openGallery(type){
+    currentGiftType = type;
+    goToPage("gallery");
+    const galleryPage = document.getElementById("gallery");
+    galleryPage.classList.toggle("family-bg", type === "family");
+    galleryPage.classList.toggle("friends-bg", type === "friends");
+    galleryPage.classList.toggle("us-bg", type === "us");
+    galleryPage.classList.toggle("future-bg", type === "future");
+    document.getElementById("galleryTitle").innerText="";
+
+    // Stop all music first
+    document.getElementById("musicFamily").pause();
+    document.getElementById("musicFriends").pause();
+    document.getElementById("musicFuture").pause();
+    document.getElementById("musicUs").pause();
+    document.getElementById("musicVideos").pause();
+
+    // Play corresponding music for this gift
+    const musicMap = {
+        family: "musicFamily",
+        friends: "musicFriends",
+        future: "musicFuture",
+        us: "musicUs",
+        videos: "musicVideos"
+    };
+
+    const musicId = musicMap[type];
+    if(musicId){
+        document.getElementById(musicId).currentTime = 0;
+        document.getElementById(musicId).play().catch(() => {
+            console.log("Music playback was blocked by the browser.");
+        });
+    }
+
+    index=0;
+
+    if(type==="videos"){
+        showVideo();
+    } else {
+        startSlideshow(type);
+    }
+}
+
+function startSlideshow(type){
+    const imgs=galleries[type];
+    const img=document.getElementById("slideImage");
+    const vid=document.getElementById("slideVideo");
+
+    vid.style.display="none";
+    img.style.display="block";
+
+    function next(){
+        if(!imgs || imgs.length===0) return;
+        img.style.opacity = 0;
+
+        setTimeout(()=>{
+            img.src = imgs[index];
+            img.style.opacity = 1;
+            index=(index+1)%imgs.length;
+        },400);
+    }
+
+    next();
+    interval=setInterval(next,2000);
+}
+
+function showVideo(){
+    if(!galleries["videos"] || galleries["videos"].length===0){
+        startSlideshow("family");
+        return;
+    }
+
+    const files = galleries["videos"];
+    const vid = document.getElementById("slideVideo");
+    const img = document.getElementById("slideImage");
+
+    let mediaIndex = 0;
+
+    function playNextMedia(){
+        if(mediaIndex >= files.length){
+            mediaIndex = 0;
+        }
+
+        const file = files[mediaIndex];
+        const isVideo = file.endsWith(".mp4") || file.endsWith(".mov") || file.endsWith(".avi");
+
+        if(isVideo){
+            img.style.display = "none";
+            vid.style.display = "block";
+            vid.muted = true;
+            vid.src = file;
+            vid.onended = () => {
+                mediaIndex++;
+                playNextMedia();
+            };
+            vid.play().catch(() => {
+                console.log("Video playback failed, moving to next.");
+                mediaIndex++;
+                playNextMedia();
+            });
+        } else {
+            vid.style.display = "none";
+            img.style.display = "block";
+            img.src = file;
+            // Show image for 2 seconds then move to next
+            setTimeout(() => {
+                mediaIndex++;
+                playNextMedia();
+            }, 2000);
+        }
+    }
+
+    playNextMedia();
+}
+
+function closeGallery(){
+    goToPage(4);
+    document.getElementById("gallery").classList.remove("family-bg", "friends-bg", "us-bg", "future-bg");
+    clearInterval(interval);
+    // Stop all music
+    document.getElementById("musicFamily").pause();
+    document.getElementById("musicFriends").pause();
+    document.getElementById("musicFuture").pause();
+    document.getElementById("musicUs").pause();
+    document.getElementById("musicVideos").pause();
+    // Reset all music
+    document.getElementById("musicFamily").currentTime = 0;
+    document.getElementById("musicFriends").currentTime = 0;
+    document.getElementById("musicFuture").currentTime = 0;
+    document.getElementById("musicUs").currentTime = 0;
+    document.getElementById("musicVideos").currentTime = 0;
+    const vid = document.getElementById("slideVideo");
+    vid.pause();
+    vid.currentTime = 0;
+}
+</script>
+
+</body>
+</html>
